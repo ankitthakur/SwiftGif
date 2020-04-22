@@ -29,6 +29,16 @@ extension UIImageView {
             }
         }
     }
+    
+    @available(iOS 9.0, *)
+    public func loadGif(fileUrl: URL) {
+        DispatchQueue.global().async {
+            let image = UIImage.gif(fileURL: fileUrl)
+            DispatchQueue.main.async {
+                self.image = image
+            }
+        }
+    }
 
 }
 
@@ -86,6 +96,18 @@ extension UIImage {
         }
 
         return gif(data: dataAsset.data)
+    }
+    
+    @available(iOS 9.0, *)
+    public class func gif(fileURL: URL) -> UIImage? {
+        // Create source from assets catalog
+        do {
+            let data = try Data(contentsOf: fileURL)
+            return gif(data: data)
+        } catch let error {
+            print("SwiftGif: Cannot turn image file url \"\(fileURL)\" into Data with error - \(error)")
+            return nil
+        }
     }
 
     internal class func delayForImageAtIndex(_ index: Int, source: CGImageSource!) -> Double {
